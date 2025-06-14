@@ -24,3 +24,21 @@ exports.getContactById = async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching contact' });
   }
 };
+
+// @desc    Create a new contact
+// @route   POST /api/contacts
+exports.createContact = async (req, res) => {
+  const { name, email, phone } = req.body;
+
+  // Basic validation
+  if (!name || !email || !phone) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  try {
+    const newContact = await Contact.create({ name, email, phone });
+    res.status(201).json(newContact);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error while creating contact' });
+  }
+};
