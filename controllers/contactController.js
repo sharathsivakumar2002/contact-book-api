@@ -42,3 +42,40 @@ exports.createContact = async (req, res) => {
     res.status(500).json({ message: 'Server error while creating contact' });
   }
 };
+
+// @desc    Update a contact
+// @route   PUT /api/contacts/:id
+exports.updateContact = async (req, res) => {
+    try {
+      const contact = await Contact.findByIdAndUpdate(req.params.id, req.body, {
+        new: true, // return updated document
+        runValidators: true, // validate new data
+      });
+  
+      if (!contact) {
+        return res.status(404).json({ message: 'Contact not found' });
+      }
+  
+      res.status(200).json(contact);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error while updating contact' });
+    }
+  };
+  
+  // @desc    Delete a contact
+  // @route   DELETE /api/contacts/:id
+  exports.deleteContact = async (req, res) => {
+    try {
+      const contact = await Contact.findByIdAndDelete(req.params.id);
+  
+      if (!contact) {
+        return res.status(404).json({ message: 'Contact not found' });
+      }
+  
+      res.status(200).json({ message: 'Contact deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error while deleting contact' });
+    }
+  };
+
+  
