@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const {
   getAllContacts,
   getContactById,
@@ -8,6 +9,8 @@ const {
   deleteContact
 } = require('../controllers/contactController');
 
+const { validateContact } = require('../middleware/validateContact');
+
 // @route GET /api/contacts
 router.get('/', getAllContacts);
 
@@ -15,13 +18,12 @@ router.get('/', getAllContacts);
 router.get('/:id', getContactById);
 
 // @route POST /api/contacts
-router.post('/', createContact);
+router.post('/', validateContact, createContact);
 
 // @route PUT /api/contacts/:id
-router.put('/:id', updateContact);
+router.put('/:id', validateContact, updateContact);
 
 // @route DELETE /api/contacts/:id
 router.delete('/:id', deleteContact);
 
 module.exports = router;
-

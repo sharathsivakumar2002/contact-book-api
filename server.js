@@ -1,30 +1,30 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const contactRoutes = require('./routes/contactRoutes');
 
 dotenv.config();
-connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
 
-const contactRoutes = require('./routes/contactRoutes');
+// Routes
 app.use('/api/contacts', contactRoutes);
 
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection failed:', err));
 
-// Sample route
-app.get('/', (req, res) => {
-    res.send('Contact Book API is running...');
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Connect to DB and start server
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-    console.log('MongoDB connected');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-})
-.catch((err) => console.log(err));
+// Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
