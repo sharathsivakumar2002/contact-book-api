@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 const {
   getAllContacts,
   getContactById,
@@ -9,21 +8,13 @@ const {
   deleteContact
 } = require('../controllers/contactController');
 
-const { validateContact } = require('../middleware/validateContact');
+const protect = require('../middleware/authMiddleware');
 
-// @route GET /api/contacts
-router.get('/', getAllContacts);
-
-// @route GET /api/contacts/:id
-router.get('/:id', getContactById);
-
-// @route POST /api/contacts
-router.post('/', validateContact, createContact);
-
-// @route PUT /api/contacts/:id
-router.put('/:id', validateContact, updateContact);
-
-// @route DELETE /api/contacts/:id
-router.delete('/:id', deleteContact);
+// All routes require authentication now
+router.get('/', protect, getAllContacts);
+router.get('/:id', protect, getContactById);
+router.post('/', protect, createContact);
+router.put('/:id', protect, updateContact);
+router.delete('/:id', protect, deleteContact);
 
 module.exports = router;
