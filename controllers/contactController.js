@@ -62,20 +62,25 @@ exports.updateContact = async (req, res) => {
     }
   };
   
-  // @desc    Delete a contact
-  // @route   DELETE /api/contacts/:id
-  exports.deleteContact = async (req, res) => {
-    try {
-      const contact = await Contact.findByIdAndDelete(req.params.id);
-  
-      if (!contact) {
-        return res.status(404).json({ message: 'Contact not found' });
-      }
-  
-      res.status(200).json({ message: 'Contact deleted successfully' });
-    } catch (error) {
-      res.status(500).json({ message: 'Server error while deleting contact' });
+// @desc    Delete a contact
+// @route   DELETE /api/contacts/:id
+exports.deleteContact = async (req, res) => {
+  try {
+    const contactId = req.params.id;
+    console.log("Deleting contact with ID:", contactId); // helpful debug log
+
+    const contact = await Contact.findByIdAndDelete(contactId);
+
+    if (!contact) {
+      return res.status(404).json({ message: 'Contact not found' });
     }
-  };
+
+    res.status(200).json({ message: 'Contact deleted successfully' });
+  } catch (error) {
+    console.error("Delete error:", error); // log actual error
+    res.status(500).json({ message: 'Server error while deleting contact' });
+  }
+};
+
 
   
